@@ -1,0 +1,8 @@
+[gd_scene format=3 uid="uid://cbt5pdhvqbh5e"]
+
+[ext_resource type="Script" uid="uid://bhtw5omxsn34s" path="res://scripts/dungeon_generation.gd" id="1_o5qli"]
+
+[node name="Node2D" type="Node2D" unique_id=489615418]
+
+[node name="TileMapLayer" type="TileMapLayer" parent="." unique_id=710903563]
+script = ExtResource("1_o5qli")
