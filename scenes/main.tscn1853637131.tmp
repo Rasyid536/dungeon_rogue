@@ -151,6 +151,8 @@ script = ExtResource("1_o5qli")
 position = Vector2(-1.1920929e-07, 0)
 scale = Vector2(0.7408791, 0.7031279)
 script = ExtResource("2_0wfyh")
+tile_size = null
+move_speed = null
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="TileMapLayer/CharacterBody2D" unique_id=533061187]
 scale = Vector2(0.99999994, 1)
