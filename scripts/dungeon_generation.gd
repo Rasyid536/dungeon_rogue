@@ -4,27 +4,28 @@ var room_count = 10;
 var min_size = 5;
 var max_size = 10;
 
+var astar = AStarGrid2D.new()
+
 var screen_resolution = Vector2(1152, 648);
 var tile_size = 16;
 
 var grid_width = int(screen_resolution.x / tile_size);
 var grid_height = int(screen_resolution.y / tile_size);
 
-# [FIX] Koordinat Atlas Tile dipisah agar lantai, lorong, dan tembok terlihat berbeda
 var FLOOR_TILE = Vector2i(0, 0)
 var PATH_TILE = Vector2i(1, 0)
 var WALL_TILE = Vector2i(2, 0)
 
-func _ready() : 
+func _ready() -> void: 
 	randomize();
 	make_dungeon();
 
 func _process(delta: float):
-	if(Input.is_action_pressed("a")):
+	if Input.is_action_just_pressed("a"):
 		clear()
 		make_dungeon()
 
-func make_dungeon() :
+func make_dungeon() -> void:
 	var room_list = [];
 	var room_has_made = 0;
 	var max_room_create_attempt = 300;
@@ -36,11 +37,10 @@ func make_dungeon() :
 		var width = randi_range(min_size, max_size);
 		var height = randi_range(min_size, max_size);
 
-		# [FIX] Mencegah error Out of Bounds pada AStar dan penempatan map
 		var x = randi_range(2, grid_width - width - 2);
 		var y = randi_range(2, grid_height - height - 2);
 
-		var new_room = Rect2i(x - 1, y -1, width + 2, height +  2);
+		var new_room = Rect2i(x - 1, y - 1, width + 2, height + 2);
 		var overlap = false;
 		for old_room in room_list:
 			if new_room.intersects(old_room):
@@ -53,21 +53,22 @@ func make_dungeon() :
 		room_list.append(created_room);
 		room_has_made += 1;
 
-		# [FIX] Memperbaiki range agar tembok tertutup sempurna
 		for cols in range(-1, width + 1) :
 			for rows in range(-1, height + 1):
 				place_tile(Vector2i(x + cols, y + rows), WALL_TILE);
 
-		# [FIX] Memperbaiki range variabel lantai agar proporsinya benar (tidak tertukar)
 		for cols in range(width) :
 			for rows in range(height):
 				place_tile(Vector2i(x + cols, y + rows), FLOOR_TILE);
 
-	var astar = AStarGrid2D.new()
+	# --- SETUP A* UNTUK KORIDOR ---
+	astar = AStarGrid2D.new()
 	astar.region = Rect2i(0, 0, grid_width, grid_height)
+	astar.cell_size = Vector2(tile_size, tile_size)
 	astar.diagonal_mode = AStarGrid2D.DIAGONAL_MODE_NEVER 
 	astar.update()
 
+	# Set bobot awal untuk membuat koridor
 	for x in range (grid_width):
 		for y in range(grid_height):
 			var pos = Vector2i(x, y)
@@ -78,7 +79,7 @@ func make_dungeon() :
 			else:
 				astar.set_point_weight_scale(pos, 1.0)
 
-
+	# Membuat koridor antar ruangan
 	for i in range(room_list.size() - 1):
 		var center_now = Vector2i(
 			room_list[i].position.x + (room_list[i].size.x / 2),
@@ -96,11 +97,31 @@ func make_dungeon() :
 			var tile_id = get_cell_source_id(pos)
 			
 			if at_this_atlas == FLOOR_TILE:
-				continue # Di dalam ruangan tetap lantai
+				continue 
 			elif tile_id == -1 or at_this_atlas == WALL_TILE:
-				# Karena tembok harganya mahal, ia hanya akan ditembus 1x sebagai pintu masuk
 				place_tile(pos, PATH_TILE)
-		
+
+	# --- RE-SETUP A* FINAL UNTUK MUSUH SETELAH KORIDOR JADI ---
+	# Di sini kita tandai tembok sebagai SOLID (tidak bisa dilewati musuh)
+	# dan lantai/path sebagai area yang bisa dilewati.
+	astar.clear()
+	astar.region = Rect2i(0, 0, grid_width, grid_height)
+	astar.cell_size = Vector2(tile_size, tile_size)
+	astar.diagonal_mode = AStarGrid2D.DIAGONAL_MODE_NEVER
+	astar.update()
+
+	for x in range(grid_width):
+		for y in range(grid_height):
+			var pos = Vector2i(x, y)
+			var tile_id = get_cell_source_id(pos)
+			var atlas_coords = get_cell_atlas_coords(pos)
+			
+			# Jika kosong atau tembok, set solid (musuh tidak bisa lewat)
+			if tile_id == -1 or atlas_coords == WALL_TILE:
+				astar.set_point_solid(pos, true)
+			else:
+				astar.set_point_solid(pos, false)
+
 func place_tile(pos: Vector2i, tile_type: Vector2i):
 	if pos.x >= 0 and pos.x < grid_width and pos.y >= 0 and pos.y < grid_height:
 		set_cell(pos, 0, tile_type)

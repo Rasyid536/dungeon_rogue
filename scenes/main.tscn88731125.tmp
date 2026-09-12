@@ -3,7 +3,7 @@
 [ext_resource type="Script" uid="uid://bhtw5omxsn34s" path="res://scripts/dungeon_generation.gd" id="1_o5qli"]
 [ext_resource type="Texture2D" uid="uid://wdm64osvurm7" path="res://assets/world_tileset.png" id="1_sugp2"]
 [ext_resource type="Script" uid="uid://c53cl2su88ff1" path="res://scripts/player_char.gd" id="3_sugp2"]
-[ext_resource type="PackedScene" uid="uid://bvuwfs3q4k4so" path="res://scenes/enemy.tscn" id="4_jyhfs"]
+[ext_resource type="Script" uid="uid://bra7typjfdc2e" path="res://scripts/enemy_char.gd" id="4_jyhfs"]
 
 [sub_resource type="TileSetAtlasSource" id="TileSetAtlasSource_jyhfs"]
 texture = ExtResource("1_sugp2")
@@ -142,34 +142,35 @@ sources/0 = SubResource("TileSetAtlasSource_jyhfs")
 
 [sub_resource type="CanvasTexture" id="CanvasTexture_0wfyh"]
 
-[sub_resource type="CanvasTexture" id="CanvasTexture_jyhfs"]
-
 [node name="Node2D" type="Node2D" unique_id=489615418]
 
 [node name="TileMapLayer" type="TileMapLayer" parent="." unique_id=710903563]
 tile_set = SubResource("TileSet_tbgi4")
 script = ExtResource("1_o5qli")
 
-[node name="Player" type="CharacterBody2D" parent="TileMapLayer" unique_id=1351704573]
+[node name="CharacterBody2D" type="CharacterBody2D" parent="TileMapLayer" unique_id=1351704573]
 position = Vector2(-1.1920929e-07, 0)
 scale = Vector2(0.7408791, 0.7031279)
 script = ExtResource("3_sugp2")
 
-[node name="CollisionShape2D" type="CollisionShape2D" parent="TileMapLayer/Player" unique_id=533061187]
+[node name="CollisionShape2D" type="CollisionShape2D" parent="TileMapLayer/CharacterBody2D" unique_id=533061187]
 scale = Vector2(0.99999994, 1)
 shape = SubResource("RectangleShape2D_sugp2")
 
-[node name="Sprite2D" type="Sprite2D" parent="TileMapLayer/Player" unique_id=1730649582]
+[node name="Sprite2D" type="Sprite2D" parent="TileMapLayer/CharacterBody2D" unique_id=1730649582]
 position = Vector2(-9.536743e-07, -9.536743e-07)
 scale = Vector2(20, 20)
 texture = SubResource("CanvasTexture_0wfyh")
 
-[node name="Dummy Enemy" parent="TileMapLayer" unique_id=780646216 instance=ExtResource("4_jyhfs")]
+[node name="CharacterBody2D2" type="CharacterBody2D" parent="TileMapLayer" unique_id=1666837916]
+script = ExtResource("4_jyhfs")
 
-[node name="BackGround" type="Sprite2D" parent="." unique_id=1142070454]
-modulate = Color(0, 0, 0, 1)
-visibility_layer = 512
-z_index = -4
-position = Vector2(575.75, 326)
-scale = Vector2(1161.5, 651)
-texture = SubResource("CanvasTexture_jyhfs")
+[node name="CollisionShape2D" type="CollisionShape2D" parent="TileMapLayer/CharacterBody2D2" unique_id=1682322312]
+position = Vector2(-8.257667e-07, -6.7055504e-07)
+scale = Vector2(0.73957026, 0.32032)
+shape = SubResource("RectangleShape2D_sugp2")
+
+[node name="Sprite2D" type="Sprite2D" parent="TileMapLayer/CharacterBody2D2" unique_id=1407382432]
+position = Vector2(-1.4956914e-05, -1.40816555e-05)
+scale = Vector2(14.791408, 6.4063997)
+texture = SubResource("CanvasTexture_0wfyh")
