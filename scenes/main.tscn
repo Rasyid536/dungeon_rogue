@@ -3,7 +3,6 @@
 [ext_resource type="Script" uid="uid://bhtw5omxsn34s" path="res://scripts/dungeon_generation.gd" id="1_o5qli"]
 [ext_resource type="Texture2D" uid="uid://wdm64osvurm7" path="res://assets/world_tileset.png" id="1_sugp2"]
 [ext_resource type="Script" uid="uid://c53cl2su88ff1" path="res://scripts/player_char.gd" id="3_sugp2"]
-[ext_resource type="PackedScene" uid="uid://bvuwfs3q4k4so" path="res://scenes/enemy.tscn" id="4_jyhfs"]
 
 [sub_resource type="TileSetAtlasSource" id="TileSetAtlasSource_jyhfs"]
 texture = ExtResource("1_sugp2")
@@ -163,8 +162,6 @@ shape = SubResource("RectangleShape2D_sugp2")
 position = Vector2(-9.536743e-07, -9.536743e-07)
 scale = Vector2(20, 20)
 texture = SubResource("CanvasTexture_0wfyh")
-
-[node name="Dummy Enemy" parent="TileMapLayer" unique_id=780646216 instance=ExtResource("4_jyhfs")]
 
 [node name="BackGround" type="Sprite2D" parent="." unique_id=1142070454]
 modulate = Color(0, 0, 0, 1)

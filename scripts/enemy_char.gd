@@ -5,9 +5,9 @@ var player: Node2D
 var astar_ref: AStarGrid2D
 
 func _ready() -> void:
+	add_to_group("entities");
+	add_to_group("enemies");
 	await get_tree().process_frame
-	force_spawn_in_room(Vector2i(1, 0)) # Ganti koordinat atlas tile spawn musuh jika ada
-	
 	player = get_tree().get_first_node_in_group("player")
 	
 	# Ambil referensi A* dari TileMap induk
@@ -32,3 +32,7 @@ func _on_player_moved(_entity) -> void:
 		
 		if move_queue.size() == 0:
 			move_queue.append(direction)
+
+func damage_to_enemy():
+	if (randi_range(1, 5) == 3):
+		queue_free();

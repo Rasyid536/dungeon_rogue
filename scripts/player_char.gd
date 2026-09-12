@@ -3,8 +3,11 @@ extends GridEntity
 
 func _ready() -> void:
 	add_to_group("player")
+	add_to_group("entities")
 	await get_tree().process_frame
 	force_spawn_in_room()
+	$".".combat.connect(player_combat);
+
 
 func _process(delta: float) -> void:
 	super(delta) # <-- WAJIB ADA: Agar fungsi gerak dasar dari GridEntity tetap aktif!
@@ -27,3 +30,8 @@ func _process(delta: float) -> void:
 	
 	if dir != Vector2i.ZERO and move_queue.size() < 3:
 		move_queue.append(dir)
+
+func player_combat(do: String, entity):
+	print(do);
+	entity.damage_to_enemy()
+	print("kills")

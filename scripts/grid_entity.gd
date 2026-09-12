@@ -1,6 +1,7 @@
 # grid_entity.gd
 class_name GridEntity
 extends CharacterBody2D
+signal combat(do, entity);
 
 signal finished_movement(entity) # Sinyal penanda selesai 1 langkah grid
 
@@ -37,7 +38,16 @@ func can_walk(tile_pos: Vector2i) -> bool:
 	
 	if tile_id == -1 or atlas_coords == Vector2i(2, 0):
 		return false 
+
+	var all_entities = get_tree().get_nodes_in_group("entities")
+	for entity in all_entities:
+		# Jika ada entitas lain yang 'target_tile'-nya sama dengan tile tujuan kita, blokir!
+		if entity != self and entity.target_tile == tile_pos:
+			combat.emit("combat jir", entity);
+			return false
 	return true
+
+
 
 func force_spawn_in_room(spawn_atlas_coord: Vector2i = Vector2i(0, 0)) -> void:
 	await get_tree().process_frame

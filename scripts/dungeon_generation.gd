@@ -15,7 +15,7 @@ var grid_height = int(screen_resolution.y / tile_size);
 var FLOOR_TILE = Vector2i(0, 0)
 var PATH_TILE = Vector2i(1, 0)
 var WALL_TILE = Vector2i(2, 0)
-
+var enemy = load("res://scenes/enemy.tscn")
 func _ready() -> void: 
 	randomize();
 	make_dungeon();
@@ -23,7 +23,11 @@ func _ready() -> void:
 func _process(delta: float):
 	if Input.is_action_just_pressed("a"):
 		clear()
+		var enemy_list = get_tree().get_nodes_in_group("enemies")
+		for enemies in enemy_list:
+			enemies.queue_free();
 		make_dungeon()
+		
 
 func make_dungeon() -> void:
 	var room_list = [];
@@ -60,6 +64,7 @@ func make_dungeon() -> void:
 		for cols in range(width) :
 			for rows in range(height):
 				place_tile(Vector2i(x + cols, y + rows), FLOOR_TILE);
+	spawn_random_enemies(5, room_list)
 
 	# --- SETUP A* UNTUK KORIDOR ---
 	astar = AStarGrid2D.new()
@@ -125,3 +130,24 @@ func make_dungeon() -> void:
 func place_tile(pos: Vector2i, tile_type: Vector2i):
 	if pos.x >= 0 and pos.x < grid_width and pos.y >= 0 and pos.y < grid_height:
 		set_cell(pos, 0, tile_type)
+
+func spawn_random_enemies(amount: int, room_list: Array) -> void:
+	for i in range(amount):
+		# 1. Pilih satu ruangan (Rect2i) secara acak dari daftar ruangan
+		var random_room: Rect2i = room_list.pick_random()
+
+		# 2. Cari titik X dan Y acak di dalam area ruangan tersebut
+		# Kita kurangi 1 agar musuh tidak nge-spawn menempel persis di tembok luar
+		var rand_x = randi_range(random_room.position.x + 1, random_room.position.x + random_room.size.x - 2)
+		var rand_y = randi_range(random_room.position.y + 1, random_room.position.y + random_room.size.y - 2)
+		var spawn_pos = Vector2i(rand_x, rand_y)
+
+		# 3. Buat instance dari path yang sudah di-preload di atas
+		var enemy_instance = enemy.instantiate()
+
+		# 4. Set posisi awal grid dan posisi asli di layar
+		enemy_instance.target_tile = spawn_pos
+		enemy_instance.global_position = map_to_local(spawn_pos)
+
+		# 5. Pasang ke Scene Tree induk agar sejajar dengan TileMap
+		call_deferred("add_child", enemy_instance)
