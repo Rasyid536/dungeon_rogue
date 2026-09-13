@@ -1,10 +1,11 @@
 [gd_scene format=3 uid="uid://cbt5pdhvqbh5e"]
 
-[ext_resource type="Script" uid="uid://bhtw5omxsn34s" path="res://scripts/dungeon_generation.gd" id="1_o5qli"]
+[ext_resource type="Script" uid="uid://ygajaincwsb8" path="res://scripts/dungeon_generation.gd" id="1_o5qli"]
 [ext_resource type="Texture2D" uid="uid://wdm64osvurm7" path="res://assets/world_tileset.png" id="1_sugp2"]
-[ext_resource type="Script" uid="uid://c53cl2su88ff1" path="res://scripts/player_char.gd" id="3_sugp2"]
+[ext_resource type="Script" uid="uid://b8qfm1aggx2p1" path="res://scripts/player_char.gd" id="3_sugp2"]
 [ext_resource type="Texture2D" uid="uid://8yawmqrtqwrs" path="res://assets/WhatsApp Image 2026-09-12 at 20.30.38.jpeg" id="4_jyhfs"]
 [ext_resource type="Texture2D" uid="uid://c2e6sq51mq5ht" path="res://assets/char.png" id="4_tefeu"]
+[ext_resource type="FontFile" uid="uid://b2j6thns4nrts" path="res://assets/M 8pt.ttf" id="5_o6xl0"]
 [ext_resource type="Script" uid="uid://xmy2flsjc4p6" path="res://scripts/fog.gd" id="5_tbgi4"]
 [ext_resource type="Texture2D" uid="uid://bhjj3pd30lqio" path="res://assets/Dead.png" id="7_o6xl0"]
 
@@ -673,6 +674,7 @@ offset_left = 107.0
 offset_top = 619.0
 offset_right = 147.0
 offset_bottom = 642.0
+theme_override_fonts/font = ExtResource("5_o6xl0")
 text = "test"
 
 [node name="turn" type="Label" parent="Control" unique_id=2044086874]
@@ -682,6 +684,7 @@ offset_left = 388.0
 offset_top = 620.0
 offset_right = 428.0
 offset_bottom = 643.0
+theme_override_fonts/font = ExtResource("5_o6xl0")
 text = "turn_zero"
 
 [node name="difficulty" type="Label" parent="Control" unique_id=95802969]
@@ -691,7 +694,8 @@ offset_left = 751.0
 offset_top = 622.0
 offset_right = 825.0
 offset_bottom = 645.0
-text = "dlevel : 1"
+theme_override_fonts/font = ExtResource("5_o6xl0")
+text = "level : 1"
 
 [node name="combat" type="Label" parent="Control" unique_id=1817484432]
 z_index = 12
@@ -700,6 +704,7 @@ offset_left = 36.0
 offset_top = 6.0
 offset_right = 119.0
 offset_bottom = 29.0
+theme_override_fonts/font = ExtResource("5_o6xl0")
 text = "no battle"
 
 [node name="sun" type="Label" parent="Control" unique_id=1892950348]
@@ -709,6 +714,7 @@ offset_left = 850.0
 offset_top = 8.0
 offset_right = 967.0
 offset_bottom = 31.0
+theme_override_fonts/font = ExtResource("5_o6xl0")
 text = "you has no sun"
 
 [node name="Fog" type="TileMapLayer" parent="." unique_id=1415181950]
