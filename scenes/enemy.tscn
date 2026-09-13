@@ -2,17 +2,11 @@
 
 [ext_resource type="Script" uid="uid://bra7typjfdc2e" path="res://scripts/enemy_char.gd" id="1_7p1mj"]
 
-[sub_resource type="RectangleShape2D" id="RectangleShape2D_md0e3"]
-
 [sub_resource type="CanvasTexture" id="CanvasTexture_4ra3w"]
 
 [node name="Dummy Enemy" type="CharacterBody2D" unique_id=780646216]
+scale = Vector2(0.82102746, 1.8025568)
 script = ExtResource("1_7p1mj")
-
-[node name="CollisionShape2D" type="CollisionShape2D" parent="." unique_id=687956210]
-position = Vector2(-8.257667e-07, -6.7055504e-07)
-scale = Vector2(0.73957026, 0.32032)
-shape = SubResource("RectangleShape2D_md0e3")
 
 [node name="Sprite2D" type="Sprite2D" parent="." unique_id=1578083875]
 position = Vector2(-1.4956914e-05, -1.40816555e-05)

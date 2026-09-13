@@ -15,7 +15,13 @@ var grid_height = int(screen_resolution.y / tile_size);
 var FLOOR_TILE = Vector2i(0, 0)
 var PATH_TILE = Vector2i(1, 0)
 var WALL_TILE = Vector2i(2, 0)
+var STAIR_TILE = Vector2i(3, 0)
+var LIGHT_TILE = Vector2i(4, 0) # [TAMBAHAN] Koordinat atlas untuk item Light (Sesuaikan jika beda)
+
 var enemy = load("res://scenes/enemy.tscn")
+@onready var fog = $"../Fog"
+var dlevel : int = 1;
+
 func _ready() -> void: 
 	randomize();
 	make_dungeon();
@@ -27,7 +33,20 @@ func _process(delta: float):
 		for enemies in enemy_list:
 			enemies.queue_free();
 		make_dungeon()
+		await get_tree().process_frame
+		fog.fill_fog()
 		
+func next_floor():
+	clear()
+	
+	dlevel += 1;
+	$"../Control/difficulty".text = "dlevel : " + str(dlevel);
+	var enemy_list = get_tree().get_nodes_in_group("enemies")
+	for enemies in enemy_list:
+		enemies.queue_free();
+	make_dungeon()
+	await get_tree().process_frame
+	fog.fill_fog()
 
 func make_dungeon() -> void:
 	var room_list = [];
@@ -64,7 +83,10 @@ func make_dungeon() -> void:
 		for cols in range(width) :
 			for rows in range(height):
 				place_tile(Vector2i(x + cols, y + rows), FLOOR_TILE);
+				
 	spawn_random_enemies(5, room_list)
+	spawn_stairs(room_list)
+	spawn_light_item(room_list) # [TAMBAHAN] Spawn item Light 1x setiap lantai baru dibuat
 
 	# --- SETUP A* UNTUK KORIDOR ---
 	astar = AStarGrid2D.new()
@@ -107,8 +129,6 @@ func make_dungeon() -> void:
 				place_tile(pos, PATH_TILE)
 
 	# --- RE-SETUP A* FINAL UNTUK MUSUH SETELAH KORIDOR JADI ---
-	# Di sini kita tandai tembok sebagai SOLID (tidak bisa dilewati musuh)
-	# dan lantai/path sebagai area yang bisa dilewati.
 	astar.clear()
 	astar.region = Rect2i(0, 0, grid_width, grid_height)
 	astar.cell_size = Vector2(tile_size, tile_size)
@@ -133,21 +153,32 @@ func place_tile(pos: Vector2i, tile_type: Vector2i):
 
 func spawn_random_enemies(amount: int, room_list: Array) -> void:
 	for i in range(amount):
-		# 1. Pilih satu ruangan (Rect2i) secara acak dari daftar ruangan
 		var random_room: Rect2i = room_list.pick_random()
 
-		# 2. Cari titik X dan Y acak di dalam area ruangan tersebut
-		# Kita kurangi 1 agar musuh tidak nge-spawn menempel persis di tembok luar
 		var rand_x = randi_range(random_room.position.x + 1, random_room.position.x + random_room.size.x - 2)
 		var rand_y = randi_range(random_room.position.y + 1, random_room.position.y + random_room.size.y - 2)
 		var spawn_pos = Vector2i(rand_x, rand_y)
 
-		# 3. Buat instance dari path yang sudah di-preload di atas
 		var enemy_instance = enemy.instantiate()
 
-		# 4. Set posisi awal grid dan posisi asli di layar
 		enemy_instance.target_tile = spawn_pos
 		enemy_instance.global_position = map_to_local(spawn_pos)
 
-		# 5. Pasang ke Scene Tree induk agar sejajar dengan TileMap
 		call_deferred("add_child", enemy_instance)
+		
+func spawn_stairs(room_list: Array) -> void:
+	var random_room: Rect2i = room_list.pick_random()
+	var rand_x = randi_range(random_room.position.x + 1, random_room.position.x + random_room.size.x - 2)
+	var rand_y = randi_range(random_room.position.y + 1, random_room.position.y + random_room.size.y - 2)
+
+	var stair_pos = Vector2i(rand_x, rand_y)
+	place_tile(stair_pos, STAIR_TILE)
+
+# [TAMBAHAN] Fungsi untuk memunculkan item light
+func spawn_light_item(room_list: Array) -> void:
+	var random_room: Rect2i = room_list.pick_random()
+	var rand_x = randi_range(random_room.position.x + 1, random_room.position.x + random_room.size.x - 2)
+	var rand_y = randi_range(random_room.position.y + 1, random_room.position.y + random_room.size.y - 2)
+
+	var item_pos = Vector2i(rand_x, rand_y)
+	place_tile(item_pos, LIGHT_TILE)
