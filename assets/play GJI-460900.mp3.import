@@ -1,0 +1,19 @@
+[remap]
+
+importer="mp3"
+type="AudioStreamMP3"
+uid="uid://deih7r5bl81tg"
+path="res://.godot/imported/play GJI-460900.mp3-843aae85f7f4170f6bfcbe48c734a3b8.mp3str"
+
+[deps]
+
+source_file="res://assets/play GJI-460900.mp3"
+dest_files=["res://.godot/imported/play GJI-460900.mp3-843aae85f7f4170f6bfcbe48c734a3b8.mp3str"]
+
+[params]
+
+loop=false
+loop_offset=0
+bpm=0
+beat_count=0
+bar_beats=4
