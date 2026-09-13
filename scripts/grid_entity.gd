@@ -50,15 +50,22 @@ func can_walk(tile_pos: Vector2i) -> bool:
 	var all_entities = get_tree().get_nodes_in_group("entities")
 	for entity in all_entities:
 		if entity != self and entity.target_tile == tile_pos:
+			
+			# Jika Player yang menabrak Musuh
 			if self.is_in_group("player"): 
-				# Tulis diserang dulu, biar nanti bisa ditimpa "player wins" oleh enemy
 				$"../../Control/combat".text = "player and enemy attacked each other"
 				combat.emit("combat jir", entity)
 				
-				# Nyerang menghabiskan 1 turn
+				# Menyerang menghabiskan 1 turn
 				turn += 1
 				turn_emitter.emit()
 				$"../../Control/turn".text = "turn : " + str(turn)
+				
+			# Jika Musuh yang menabrak Player (Musuh Aktif Menyerang)
+			elif self.is_in_group("enemies") and entity.is_in_group("player"):
+				if entity.has_method("take_damage"):
+					entity.take_damage(randi_range(1, 2))
+					
 			return false
 
 	# 3. Kalau aman dan yang jalan adalah player, tambah turn!

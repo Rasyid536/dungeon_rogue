@@ -6,6 +6,7 @@
 [ext_resource type="Texture2D" uid="uid://8yawmqrtqwrs" path="res://assets/WhatsApp Image 2026-09-12 at 20.30.38.jpeg" id="4_jyhfs"]
 [ext_resource type="Texture2D" uid="uid://c2e6sq51mq5ht" path="res://assets/char.png" id="4_tefeu"]
 [ext_resource type="Script" uid="uid://xmy2flsjc4p6" path="res://scripts/fog.gd" id="5_tbgi4"]
+[ext_resource type="Texture2D" uid="uid://bhjj3pd30lqio" path="res://assets/Dead.png" id="7_o6xl0"]
 
 [sub_resource type="TileSetAtlasSource" id="TileSetAtlasSource_jyhfs"]
 texture = ExtResource("1_sugp2")
@@ -714,3 +715,10 @@ text = "you has no sun"
 z_index = 5
 tile_set = SubResource("TileSet_tefeu")
 script = ExtResource("5_tbgi4")
+
+[node name="dead ui" type="Sprite2D" parent="." unique_id=1616028501]
+visible = false
+z_index = 3
+position = Vector2(609, 321)
+scale = Vector2(1.1160002, 1)
+texture = ExtResource("7_o6xl0")
